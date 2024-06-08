@@ -11,6 +11,7 @@ const typedfield = document.getElementById('typed');
 const wrap = document.getElementById('wrap');
 const start = document.getElementById('start');
 const count = document.getElementById('count');
+const jaspan = document.getElementById('ja');
 
 
 // 複数のテキストを格納する配列
@@ -95,6 +96,10 @@ const createText = () => {
 
     // 出題数のカウントアップ
     pageCount++;
+    //　-----　MAXPAGEを超えたら終了
+    if(pageCount > MAX_PAGE){
+        gameOver();        
+    }
 
     // 正タイプした文字列をクリア
     typed = '';
@@ -108,10 +113,11 @@ const createText = () => {
     untypedfield.textContent = untyped;
 
     // ---- 今何問目というのを画面上に表示する ----
+    count.textContent = `第${pageCount}問`;
+    count.textContent = "第" + pageCount + "問";
 
-    
     // ---- 日本語を表示する ----
-
+    jaspan.textContent = `日本語訳：${words[random].ja}`;
 
 };
 
@@ -164,8 +170,7 @@ const rankCheck = score => {
 };
 
 // ゲームを終了
-const gameOver = id => {
-    clearInterval(id);
+const gameOver = () => {
     const result = confirm(rankCheck(score));
 
     // OKボタンをクリックされたらリロードする
@@ -174,29 +179,9 @@ const gameOver = id => {
     }
 };
 
-// カウントダウンタイマー
-const timer = () => {
-
-    // タイマー部分のHTML要素（ｐ要素）を取得
-    let time = count.textContent;
-
-     const id = setInterval(() => {
-        // カウントダウンする
-        time--;
-        count.textContent = time;
-
-        // カウントが0になったらタイマーを停止する
-        if(time <= 0) {
-           gameOver(id);
-        }
-     }, 1000);
-};
 
 // ゲームスタート時の処理
 start.addEventListener ('click', () => {
-
-    // カウントダウンタイマーを開始する
-    timer();
 
     // 出題カウントのクリア
     pageCount = 0;
@@ -211,5 +196,7 @@ start.addEventListener ('click', () => {
     document.addEventListener('keypress', keyPress);
 });
 
+
 untypedfield.textContent = 'スタートボタンで開始';
+count.textContent = `${MAX_PAGE}問出題します！`;
 
